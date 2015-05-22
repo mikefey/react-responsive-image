@@ -1,0 +1,20 @@
+{
+  "name": "responsive-image",
+  "version": "1.0.0",
+  "description": "Sample app using responsive images for React",
+  "dependencies": {
+    "browserify": "^9.0.8",
+    "domready": "^1.0.8",
+    "es6-promise": "^2.0.1",
+    "events": "^1.0.2",
+    "gulp": "^3.8.11",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.4",
+    "object-assign": "^2.0.0",
+    "react": "^0.12.0",
+    "react-tools": "*",
+    "reactify": "^1.1.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
