@@ -12,6 +12,7 @@ var ResponsiveImage = React.createClass({
 
   componentDidMount: function() {
     ResponsiveImageStore.addChangeListener(this._onChange);
+    this._onChange();
   },
 
   componentWillUnmount: function() {
