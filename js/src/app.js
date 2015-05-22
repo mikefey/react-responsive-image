@@ -5,6 +5,8 @@ var ResponsiveImage = require('./components/image/ResponsiveImage.js.jsx');
 
 var App = {
   init: function() {
+    // If rendering from the server, the 'initialUrl' property would be
+    // chosen on the server-side based on device-detection.
     var imgData = {
       initialUrl: 'images/img-desktop.jpg',
       desktopImageUrl: 'images/img-desktop.jpg',
