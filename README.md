@@ -8,8 +8,26 @@ Displays different image sizes based on the user's window width. Currently suppo
 npm i react-responsive-image
 ```
 
+## to run demo
+```
+npm start
+```
+Then navigate to [http://localhost:3000/demo.html](http://localhost:3000/demo.html)
+
+## to run tests
+```
+npm test
+```
+
+## to build
+```
+npm run build
+```
+
 ## usage
 ```
+import React from 'react';
+import ReactDOM from 'react-dom';
 import ResponsiveImage from 'react-responsive-image';
 
 const imageData = {
