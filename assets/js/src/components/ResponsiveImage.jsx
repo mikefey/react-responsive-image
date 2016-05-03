@@ -98,7 +98,9 @@ const ResponsiveImage = React.createClass({
           currentUrl: newUrl,
           currentSize,
         }, function () {
-          this._preloadImage(this.state.currentUrl);
+          if (this.props.background) {
+            this._preloadImage(this.state.currentUrl);
+          }
 
           // Set the previous image size to equal the
           // current image size
@@ -148,6 +150,7 @@ const ResponsiveImage = React.createClass({
     if (!this.props.background) {
       element = (
         <img
+          onLoad={this._onLoad}
           ref='image'
           style={this.props.style}
           className={className}
