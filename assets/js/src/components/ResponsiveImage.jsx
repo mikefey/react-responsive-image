@@ -49,8 +49,12 @@ class ResponsiveImage extends React.Component {
    */
   render() {
     const currentSizeClone = this.getCurrentSizeClone();
+    const additionalClass = this.props.className ?
+      ' ' + this.props.className : '';
+    const className = 'component-responsive-image' + additionalClass;
+    const style = this.props.style;
 
-    return (<div className='component-responsive-image'>
+    return (<div style={style} className={className}>
       {currentSizeClone}
     </div>);
   }
@@ -87,6 +91,7 @@ class ResponsiveImage extends React.Component {
       background: this.props.background,
       key: 'image-size-' + this.state.currentImageSize.props.minWidth,
       lazy: this.props.lazy,
+      onLoad: this.props.onLoad,
       preloadBackground: this.props.preloadBackground,
       ref: 'currentImageSize',
       windowSize: this.state.windowSize,
@@ -137,9 +142,12 @@ class ResponsiveImage extends React.Component {
  * @prop {Boolean} background - If set to true, the comopnent will render a
  * background image
  * @prop {Array|Object} children - The child elements of the component
+ * @prop {String} className - An additional className to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
+ * @prop {Function} onLoad - A callback to fire when the image is loaded
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
+ * @prop {Object} style - A style object to add ot the component
  */
 ResponsiveImage.propTypes = {
   alt: React.PropTypes.string,
@@ -148,8 +156,11 @@ ResponsiveImage.propTypes = {
     React.PropTypes.array,
     React.PropTypes.object,
   ]),
+  className: React.PropTypes.string,
   lazy: React.PropTypes.bool,
+  onLoad: React.PropTypes.func,
   preloadBackground: React.PropTypes.bool,
+  style: React.PropTypes.object,
 };
 
 export default ResponsiveImage;

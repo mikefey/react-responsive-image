@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-addons-test-utils';
 import eventHelper from '../assets/js/src/helpers/event';
 import ResponsiveImage from '../assets/js/src/components/ResponsiveImage.jsx';
+import ResponsiveImageSize from '../assets/js/src/components/ResponsiveImageSize.jsx';
 
 const host = window.location.host;
 const imageData = {
@@ -16,9 +17,21 @@ const imageData = {
 
 test('ResponsiveImage component: Should return an object ', (assert) => {
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      data={imageData}
-    />
+    <ResponsiveImage>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
   assert.equal(typeof component, 'object');
@@ -27,15 +40,52 @@ test('ResponsiveImage component: Should return an object ', (assert) => {
 });
 
 
-test('ResponsiveImage component: Should render a background image', (assert) => {
+test('ResponsiveImage component: Should render child ResponsiveImageSize' +
+  ' components ', (assert) => {
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      background
-      data={imageData}
-    />
+    <ResponsiveImage>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
-  const node = ReactDOM.findDOMNode(component);
+  assert.equal(component.props.children[0].type.name, 'ResponsiveImageSize');
+  ReactDOM.unmountComponentAtNode(document);
+  assert.end();
+});
+
+
+test('ResponsiveImage component: Should render a background image', (assert) => {
+  const component = ReactTestUtils.renderIntoDocument(
+    <ResponsiveImage background>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
+  );
+
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
   const nodeStyle = node.getAttribute('style');
 
   window.innerWidth = 400;
@@ -52,10 +102,21 @@ test('ResponsiveImage component: Should render a background image', (assert) => 
 
 test('ResponsiveImage component: Should add an additional class ', (assert) => {
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      className={'additional-class'}
-      data={imageData}
-    />
+    <ResponsiveImage className='additional-class'>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
   const node = ReactDOM.findDOMNode(component);
@@ -67,26 +128,7 @@ test('ResponsiveImage component: Should add an additional class ', (assert) => {
 });
 
 
-test('ResponsiveImage component: Should add an additional class to a' +
-  'background image', (assert) => {
-  const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      background
-      className={'additional-class'}
-      data={imageData}
-    />
-  );
-
-  const node = ReactDOM.findDOMNode(component);
-  const nodeClass = node.getAttribute('class');
-
-  assert.equal(nodeClass, 'component-responsive-image additional-class background');
-  ReactDOM.unmountComponentAtNode(document);
-  assert.end();
-});
-
-
-test('ResponsiveImage component: Should load the medium size image if the ' +
+test('ResponsiveImage component: Should load the proper size image if the ' +
   'browser width is greater than 768px ', (assert) => {
   window.innerWidth = 769;
 
@@ -95,67 +137,102 @@ test('ResponsiveImage component: Should load the medium size image if the ' +
   eventHelper.dispatchEvent(window, resizeEvent);
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      data={imageData}
-    />
+    <ResponsiveImage className='additional-class'>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
-  assert.equal(component.state.currentUrl, imageData.mediumImageUrl);
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+  const nodeSrc = node.getAttribute('src');
+
+  assert.equal(nodeSrc, imageData.mediumImageUrl);
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });
 
 
 test('ResponsiveImage component: Should load the original size image if the ' +
-  'browser width is greater than 1024px ', (assert) => {
-  window.innerWidth = 1025;
+  'browser width is greater than 1100px ', (assert) => {
+  window.innerWidth = 1101;
 
   const resizeEvent =
     eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
   eventHelper.dispatchEvent(window, resizeEvent);
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      data={imageData}
-    />
+    <ResponsiveImage className='additional-class'>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
-  assert.equal(component.state.currentUrl, imageData.originalImageUrl);
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+  const nodeSrc = node.getAttribute('src');
+
+  assert.equal(nodeSrc, imageData.originalImageUrl);
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });
 
 
-test('ResponsiveImage component: Should fire the onLoad callback with the ' +
-  'correct params', (assert) => {
-  const imageId = 'an-id';
-  let callCount = 0;
+test('ResponsiveImage component: Should fire the onLoad callback', (assert) => {
   window.innerWidth = 400;
 
+  let loadCount = 0;
   const resizeEvent =
     eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
   eventHelper.dispatchEvent(window, resizeEvent);
 
-  function loadCallback(currentUrl, img, id) {
-    callCount++;
+  function loadCallback() {
+    loadCount++;
 
     // there will be 2 callbacks fired, one for the initial image and another
     // because a new image is loaded when the window is resized
-    if (callCount === 1) {
-      assert.equal(currentUrl, imageData.smallImageUrl);
-      assert.equal(typeof img, 'object');
-      assert.equal(id, imageId);
+    if (loadCount === 1) {
       ReactDOM.unmountComponentAtNode(document);
       assert.end();
     }
   }
 
-  const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      id={imageId}
-      onLoad={loadCallback}
-      data={imageData}
-    />
+  ReactTestUtils.renderIntoDocument(
+    <ResponsiveImage className='additional-class' onLoad={loadCallback}>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 });
 
@@ -169,66 +246,78 @@ test('ResponsiveImage component: Should load the placeholder image if the ' +
   eventHelper.dispatchEvent(window, resizeEvent);
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      lazy
-      data={imageData}
-    />
+    <ResponsiveImage lazy>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
-  const imageSrc = ReactDOM.findDOMNode(component).getAttribute('src');
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+  const nodeSrc = node.getAttribute('src');
 
-  assert.equal(imageSrc, component.placeHolderUrl);
+  assert.equal(nodeSrc, component.refs.currentImageSize.placeHolderUrl);
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });
 
 
 test('ResponsiveImage component: Should load the the proper image if the ' +
-  'lazy prop is true and lazyLoad() is called', (assert) => {
-  window.innerWidth = 1025;
+  'lazy prop is true and loadImage() is called', (assert) => {
+  window.innerWidth = 1101;
 
+  let loadCount = 0;
   const resizeEvent =
     eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
   eventHelper.dispatchEvent(window, resizeEvent);
 
-  function loadCallback(currentUrl) {
-    assert.equal(currentUrl, imageData.originalImageUrl);
-    ReactDOM.unmountComponentAtNode(document);
-    assert.end();
+  function lazyLoadCallback() {
+    loadCount++;
+
+    // there will be 2 callbacks fired, one for the initial image and another
+    // because a new image is loaded when the window is resized
+    if (loadCount === 1) {
+      const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+      const nodeSrc = node.getAttribute('src');
+
+      assert.equal(nodeSrc, imageData.originalImageUrl);
+      ReactDOM.unmountComponentAtNode(document);
+      assert.end();
+    }
   }
 
   const component = ReactTestUtils.renderIntoDocument(
     <ResponsiveImage
       lazy
-      onLoad={loadCallback}
-      data={imageData}
-    />
+      onLoad={ lazyLoadCallback}
+    >
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
 
-  component.lazyLoad();
-});
-
-
-test('ResponsiveImage component: Should not load other sizes if the lockSize ' +
-  'prop is true ', (assert) => {
-  window.innerWidth = 700;
-
-  const resizeEvent =
-    eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
-  eventHelper.dispatchEvent(window, resizeEvent);
-
-  const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      lockSize
-      data={imageData}
-    />
-  );
-
-  const imageSrc = ReactDOM.findDOMNode(component).getAttribute('src');
-
-  assert.equal(imageSrc, imageData.initialUrl);
-  ReactDOM.unmountComponentAtNode(document);
-  assert.end();
+  component.loadImage();
 });
 
 
@@ -238,40 +327,28 @@ test('ResponsiveImage component: Should add style ', (assert) => {
   };
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      style={newStyle}
-      data={imageData}
-    />
+    <ResponsiveImage style={newStyle}>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
   );
+
 
   const node = ReactDOM.findDOMNode(component);
   const nodeStyle = node.getAttribute('style');
 
-  assert.equal(nodeStyle, 'left:10px;');
+  assert.equal(nodeStyle, 'left: 10px;');
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });
-
-
-test('ResponsiveImage component: Should add style to background image element',
-  (assert) => {
-    const newStyle = {
-      left: '10px',
-    };
-
-    const component = ReactTestUtils.renderIntoDocument(
-      <ResponsiveImage
-        background
-        style={newStyle}
-        data={imageData}
-      />
-    );
-
-    const node = ReactDOM.findDOMNode(component);
-    const nodeStyle = node.getAttribute('style');
-
-    assert.equal(nodeStyle, 'background-image: url(' +
-      imageData.smallImageUrl + '); left: 10px;');
-    ReactDOM.unmountComponentAtNode(document);
-    assert.end();
-  });

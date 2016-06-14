@@ -51,11 +51,8 @@ class ResponsiveImageSize extends React.Component {
     const imageElement = this.renderImageElement();
     const backgroundClass = this.props.background ? ' background' : '';
     const loadedClass = this.state.loaded ? ' loaded' : '';
-    const additionalClass = this.props.className ?
-      ' ' + this.props.className : '';
     const className = 'component-responsive-image-size' +
       backgroundClass +
-      additionalClass +
       loadedClass;
 
     return (<div className={className}>
@@ -77,7 +74,6 @@ class ResponsiveImageSize extends React.Component {
           alt={this.props.alt}
           onLoad={this.onLoad}
           ref='image'
-          style={this.props.style}
           src={this.state.imagePath}
         />
       );
@@ -85,10 +81,9 @@ class ResponsiveImageSize extends React.Component {
       const backgroundStyle = {
         backgroundImage: 'url(' + this.state.imagePath + ')',
       };
-      const style = Object.assign(backgroundStyle, this.props.style);
 
       element = (
-        <div style={style} >
+        <div style={backgroundStyle} >
           {this.props.children}
         </div>
       );
@@ -143,7 +138,6 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Boolean} background - If set to true, the comopnent will render a
  * background image
  * @prop {Array|Object} children - The child elements of the component
- * @prop {String} className - An additional className to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
  * @prop {Boolean} lockSize - If set to true, the component will only load the
  * initial size
@@ -151,7 +145,6 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Object} path - The image path
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
- * @prop {Object} style - A style object to add ot the component
  */
 ResponsiveImageSize.propTypes = {
   alt: React.PropTypes.string,
@@ -160,12 +153,10 @@ ResponsiveImageSize.propTypes = {
     React.PropTypes.array,
     React.PropTypes.object,
   ]),
-  className: React.PropTypes.string,
   lazy: React.PropTypes.bool,
   onLoad: React.PropTypes.func,
   path: React.PropTypes.string,
   preloadBackground: React.PropTypes.bool,
-  style: React.PropTypes.object,
 };
 
 
