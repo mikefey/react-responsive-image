@@ -1,75 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import AppDispatcher from './../dispatcher/AppDispatcher';
-import AppConstants from './../constants/AppConstants';
-import ResponsiveImageStore from './../stores/ResponsiveImageStore';
+
+class ResponsiveImage extends React.Component {
+  constructor(props) {
+    super(props);
 
 
-const ResponsiveImage = React.createClass({
-  /**
-   * Used by React as the component name
-   */
-  displayName: 'ResponsiveImage',
+    // used by React as the component name
+    this.displayName = 'ResponsiveImage';
 
 
-  /**
-   * Blank 1px X 1px .gif in base64 format
-   */
-  placeHolderUrl: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-
-
-  /**
-   * Expected propTypes
-   * @prop {Boolean} background - If set to true, the comopnent will render a
-   * background image
-   * @prop {Array|Object} children - The child elements of the component
-   * @prop {String} className - An additional className to add to the component
-   * @prop {Object} data - A data object containing image urls for the original,
-   * medium, and small images
-   * @prop {String|Number} id - A unique id for the component
-   * @prop {Boolean} lazy - If the component should lazy-load the image
-   * @prop {Boolean} lockSize - If set to true, the component will only load the
-   * initial size
-   * @prop {Function} onLoad - A callback to fire when the image is loaded
-   * @prop {Object} style - A style object to add to the component
-   */
-  propTypes: {
-    background: React.PropTypes.bool,
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.array,
-      React.PropTypes.object,
-    ]),
-    className: React.PropTypes.string,
-    data: React.PropTypes.shape({
-      initialUrl: React.PropTypes.string.isRequired,
-      smallImageUrl: React.PropTypes.string.isRequired,
-      mediumImageUrl: React.PropTypes.string.isRequired,
-      originalImageUrl: React.PropTypes.string.isRequired,
-    }).isRequired,
-    id: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
-    ]),
-    lazy: React.PropTypes.bool,
-    lockSize: React.PropTypes.bool,
-    onLoad: React.PropTypes.func,
-    style: React.PropTypes.object,
-  },
-
-
-  /**
-   * Returns initial state object
-   * @returns {Object} initial state object
-   */
-  getInitialState() {
-    return {
-      currentUrl: this.props.data.initialUrl || this.placeHolderUrl,
-      previousSize: 'previousSize',
-      currentSize: 'currentSize',
-      shouldLoad: !this.props.lazy ? true : false,
-      loaded: false,
+    // initial state object
+    this.state = {
+      currentImageSize: this.getInitialSize(),
+      windowSize: {
+        width: 0,
+        height: 0,
+      },
     };
-  },
+
+
+    // bind functions to component
+    this.onResize = this.onResize.bind(this);
+  }
 
 
   /**
@@ -77,42 +29,9 @@ const ResponsiveImage = React.createClass({
    * @returns {undefined} undefined
    */
   componentDidMount() {
-    this.node = ReactDOM.findDOMNode(this);
-
-    if ('orientationchange' in window) {
-      window.addEventListener('orientationchange', this._onResize);
-    } else {
-      window.addEventListener('resize', this._onResize);
-    }
-
-    this._onResize();
-    ResponsiveImageStore.addChangeListener(this._onChange);
-
-    if (!this.props.lazy) {
-      const storeState = ResponsiveImageStore.getState();
-      const currentSize = storeState.currentBreakpoint.name;
-      const newUrl = this._getImageUrl(currentSize);
-
-      if (!this.props.lockSize) {
-        this.setState({
-          currentUrl: newUrl,
-          currentSize,
-        }, function () {
-          if (this.props.background) {
-            this._preloadImage(this.state.currentUrl);
-          }
-
-          // Set the previous image size to equal the
-          // current image size
-          this.setState({
-            previousSize: this.state.currentSize,
-          });
-        });
-      } else {
-        this._preloadImage(this.state.currentUrl);
-      }
-    }
-  },
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+  }
 
 
   /**
@@ -120,171 +39,117 @@ const ResponsiveImage = React.createClass({
    * @returns {undefined} undefined
    */
   componentWillUnmount() {
-    window.removeEventListener('resize', this._onResize);
-    window.removeEventListener('orientationchange', this._onResize);
-    ResponsiveImageStore.removeChangeListener(this._onChange);
-  },
+    window.removeEventListener('resize', this.onResize);
+  }
 
 
   /**
    * Renders component
-   * @returns {Object} React element
+   * @returns {ReactElement} React element
    */
   render() {
-    const currentUrl = this.props.lazy ? this.placeHolderUrl : this.state.currentUrl;
-    const backgroundStyle = { backgroundImage: 'url(' + currentUrl + ')' };
-    const style = Object.assign(backgroundStyle, this.props.style);
-    const loadedClass = this.state.loaded ? ' loaded' : '';
-    const additionalClass = this.props.className ?
-      ' ' + this.props.className : '';
-    let className = 'component-responsive-image' +
-      additionalClass +
-      loadedClass;
+    const currentSizeClone = this.getCurrentSizeClone();
 
-    if (this.props.background) {
-      className += ' background';
-    }
-
-    let element;
-
-    if (!this.props.background) {
-      element = (
-        <img
-          onLoad={this._onLoad}
-          ref='image'
-          style={this.props.style}
-          className={className}
-          src={currentUrl}
-        />
-      );
-    } else {
-      element = (
-        <div
-          className={className}
-          style={style}
-        >
-          {this.props.children}
-        </div>
-      );
-    }
-
-    return element;
-  },
+    return (<div className='component-responsive-image'>
+      {currentSizeClone}
+    </div>);
+  }
 
 
   /**
-   * Public method to load the image
+   * Gets the initial size
    * @returns {undefined} undefined
    */
-  lazyLoad() {
-    if (this.isMounted()) {
-      this.setState({
-        shouldLoad: true,
-      }, this._onChange);
-    }
-  },
+  getInitialSize() {
+    let initialSize;
 
-
-  /**
-   * Preloads an image
-   * @param {String} url - The image url
-   * @returns {undefined} undefined
-   */
-  _preloadImage(url) {
-    const _this = this;
-    const img = new Image();
-
-    img.onload = function () {
-      _this._onLoad();
-    };
-
-    img.src = url;
-  },
-
-
-  /**
-   * Called when the image is loaded
-   * @returns {undefined} undefined
-   */
-  _onLoad() {
-    if (this.isMounted()) {
-      const currentUrl = this._getImageUrl(this.state.currentSize);
-
-      if (this.isMounted() && currentUrl !== this.state.currentUrl) {
-        this.setState({ currentUrl });
+    for (let i = 0; i < this.props.children.length; i++) {
+      if (this.props.children[i].props.default) {
+        initialSize = this.props.children[i];
       }
-
-      if (this.props.onLoad) {
-        const id = this.props.id;
-        const img = this.refs.image || null;
-
-        this.props.onLoad(currentUrl, img, id);
-      }
-
-      this.setState({ loaded: true });
     }
-  },
+
+    if (!initialSize) {
+      initialSize = this.props.children[0];
+    }
+
+    return initialSize;
+  }
 
 
   /**
-   * Called when a 'CHANGE' event is emitted from the ResponsiveImageStore
+   * Returns a clone of the current image size with added props
    * @returns {undefined} undefined
    */
-  _onChange() {
-    const _this = this;
-    const storeState = ResponsiveImageStore.getState();
-
-    if (this.isMounted() && this.state.shouldLoad) {
-      // Get the name of the current breakpoint from the
-      // ResponsiveImageStore ('desktop', 'mobile', or 'tablet')
-      this.setState({
-        currentSize: storeState.currentBreakpoint.name,
-      }, function () {
-        // If the new size does not equal the previous size,
-        // Change the image url.
-
-        if (_this.state.currentSize !== _this.state.previousSize &&
-          !_this.props.lockSize) {
-          _this._preloadImage(_this._getImageUrl(_this.state.currentSize));
-        }
-
-        // Set the previous image size to equal the
-        // current image size
-        this.setState({
-          previousSize: this.state.currentSize,
-        });
-      });
-    }
-  },
+  getCurrentSizeClone() {
+    return React.cloneElement(this.state.currentImageSize, {
+      alt: this.props.alt,
+      background: this.props.background,
+      key: 'image-size-' + this.state.currentImageSize.props.minWidth,
+      lazy: this.props.lazy,
+      preloadBackground: this.props.preloadBackground,
+      ref: 'currentImageSize',
+      windowSize: this.state.windowSize,
+    });
+  }
 
 
   /**
-   * Gets image url based on screen size
-   * @param {String} size - The screen size as a string
-   * @returns {String} url of image
-   */
-  _getImageUrl(size) {
-    let url;
-
-    url = this.props.data[size + 'ImageUrl'];
-
-    return url;
-  },
-
-
-  /**
-   * Called when the browser is resized
+   * Resize handler
    * @returns {undefined} undefined
    */
-  _onResize() {
-    AppDispatcher.handleViewAction({
-      actionType: AppConstants.WINDOW_RESIZE,
+  onResize() {
+    let currentImageSize;
+
+    const windowSize = {
       width: window.innerWidth,
       height: window.innerHeight,
-    });
+    };
 
-    this.windowResized = true;
-  },
-});
+    for (let i = 0; i < this.props.children.length; i++) {
+      const childProps = this.props.children[i].props;
+
+      if (windowSize.width >= childProps.minWidth) {
+        currentImageSize = this.props.children[i];
+      }
+    }
+
+    this.setState({
+      windowSize,
+      currentImageSize,
+    });
+  }
+
+
+  /**
+   * Loads the image, intended as a public method to lazy load the image
+   * @returns {undefined} undefined
+   */
+  loadImage() {
+    this.refs.currentImageSize.preloadImage();
+  }
+}
+
+
+/**
+ * Expected propTypes
+ * @prop {String} alt - The value for the image alt attribute
+ * @prop {Boolean} background - If set to true, the comopnent will render a
+ * background image
+ * @prop {Array|Object} children - The child elements of the component
+ * @prop {Boolean} lazy - If the component should lazy-load the image
+ * @prop {Boolean} preloadBackground - If the image is a background image,
+ * setting this to true will preload it before displaying
+ */
+ResponsiveImage.propTypes = {
+  alt: React.PropTypes.string,
+  background: React.PropTypes.bool,
+  children: React.PropTypes.oneOfType([
+    React.PropTypes.array,
+    React.PropTypes.object,
+  ]),
+  lazy: React.PropTypes.bool,
+  preloadBackground: React.PropTypes.bool,
+};
 
 export default ResponsiveImage;

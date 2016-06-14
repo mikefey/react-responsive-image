@@ -3,14 +3,8 @@ import './../../css/src/main.scss';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ResponsiveImage from './../../../index.js';
-
-const imageData = {
-  initialUrl: 'assets/images/original/building.jpg',
-  smallImageUrl: 'assets/images/small/building.jpg',
-  mediumImageUrl: 'assets/images/medium/building.jpg',
-  originalImageUrl: 'assets/images/original/building.jpg',
-};
+import ResponsiveImage from './components/ResponsiveImage.jsx';
+import ResponsiveImageSize from './components/ResponsiveImageSize.jsx';
 
 
 /**
@@ -39,11 +33,21 @@ domReady(() => {
   const appContainer = document.getElementsByClassName('app-container')[0];
 
   ReactDOM.render(
-    <div>
-      <ResponsiveImage
-        data={imageData}
+    <ResponsiveImage>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={'assets/images/small/building.jpg'}
       />
-    </div>,
+      <ResponsiveImageSize
+        minWidth={768}
+        path={'assets/images/medium/building.jpg'}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={'assets/images/original/building.jpg'}
+      />
+    </ResponsiveImage>,
     appContainer
   );
 });

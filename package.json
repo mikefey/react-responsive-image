@@ -1,14 +1,13 @@
 {
   "name": "react-responsive-image",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A responsive image React component",
   "main": "index.js",
   "author": "Mike Fey",
   "license": "ISC",
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/mikefey/react-responsive-image"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikefey/react-responsive-image"
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start",
@@ -18,8 +17,8 @@
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js -d --display-reasons --display-chunks --progress"
   },
   "dependencies": {
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
@@ -32,9 +31,11 @@
     "babel-preset-stage-0": "^6.3.13",
     "css-loader": "^0.23.1",
     "document-ready-promise": "^3.0.1",
-    "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^4.0.0",
-    "eslint-plugin-react": "^3.16.1",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.0",
+    "eslint-plugin-jsx-a11y": "^1.2.0",
+    "eslint-plugin-react": "^5.1.1",
     "faucet": "0.0.1",
     "file-loader": "^0.8.5",
     "http-server": "^0.8.5",

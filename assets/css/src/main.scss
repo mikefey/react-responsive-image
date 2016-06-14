@@ -4,3 +4,22 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.component-responsive-image-size {
+  opacity: 0;
+  transition: opacity .5s ease-out;
+
+  &.background {
+    height: 400px;
+    width: 400px;
+
+    div {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &.loaded {
+    opacity: 1;
+  }
+}
