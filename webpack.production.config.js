@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './assets/js/src/main.js',
+  entry: './assets/js/src/index.js',
   output: {
     path: 'assets/js/lib/',
     filename: 'react-responsive-image.build.js',
