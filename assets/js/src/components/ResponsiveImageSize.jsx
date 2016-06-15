@@ -18,8 +18,7 @@ class ResponsiveImageSize extends React.Component {
     this.state = {
       imagePath: (this.props.preloadBackground || this.props.lazy) ?
         this.placeHolderUrl : this.props.path,
-      loaded: (this.props.background && !this.props.preloadBackground) ? true :
-        false,
+      loaded: (this.props.background && !this.props.preloadBackground),
       fileWidth: 0,
       fileHeight: 0,
     };
@@ -138,9 +137,13 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Boolean} background - If set to true, the comopnent will render a
  * background image
  * @prop {Array|Object} children - The child elements of the component
+ * @prop {Boolean} default - If this is the default size to be loaded, before
+ * the window width is available. Mainly used for rendering from the server.
  * @prop {Boolean} lazy - If the component should lazy-load the image
  * @prop {Boolean} lockSize - If set to true, the component will only load the
  * initial size
+ * @prop {Number} minWidth - The minimum width the window should be to load
+ * this image
  * @prop {Function} onLoad - A callback to fire when the image is loaded
  * @prop {Object} path - The image path
  * @prop {Boolean} preloadBackground - If the image is a background image,
@@ -153,9 +156,11 @@ ResponsiveImageSize.propTypes = {
     React.PropTypes.array,
     React.PropTypes.object,
   ]),
+  default: React.PropTypes.bool,
   lazy: React.PropTypes.bool,
+  minWidth: React.PropTypes.number.isRequired,
   onLoad: React.PropTypes.func,
-  path: React.PropTypes.string,
+  path: React.PropTypes.string.isRequired,
   preloadBackground: React.PropTypes.bool,
 };
 
