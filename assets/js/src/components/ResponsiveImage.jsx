@@ -52,9 +52,8 @@ class ResponsiveImage extends React.Component {
     const additionalClass = this.props.className ?
       ' ' + this.props.className : '';
     const className = 'component-responsive-image' + additionalClass;
-    const style = this.props.style;
 
-    return (<div style={style} className={className}>
+    return (<div className={className}>
       {currentSizeClone}
     </div>);
   }
@@ -94,6 +93,7 @@ class ResponsiveImage extends React.Component {
       onLoad: this.props.onLoad,
       preloadBackground: this.props.preloadBackground,
       ref: 'currentImageSize',
+      style: this.props.style,
       windowSize: this.state.windowSize,
     });
   }
@@ -147,7 +147,7 @@ class ResponsiveImage extends React.Component {
  * @prop {Function} onLoad - A callback to fire when the image is loaded
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
- * @prop {Object} style - A style object to add ot the component
+ * @prop {Object} style - A style object to add to the component
  */
 ResponsiveImage.propTypes = {
   alt: React.PropTypes.string,

@@ -299,7 +299,7 @@ test('ResponsiveImage component: Should load the the proper image if the ' +
   const component = ReactTestUtils.renderIntoDocument(
     <ResponsiveImage
       lazy
-      onLoad={ lazyLoadCallback}
+      onLoad={lazyLoadCallback}
     >
       <ResponsiveImageSize
         default
@@ -345,10 +345,44 @@ test('ResponsiveImage component: Should add style ', (assert) => {
   );
 
 
-  const node = ReactDOM.findDOMNode(component);
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
   const nodeStyle = node.getAttribute('style');
 
   assert.equal(nodeStyle, 'left: 10px;');
+  ReactDOM.unmountComponentAtNode(document);
+  assert.end();
+});
+
+
+test('ResponsiveImage component: Should add style to a background image',
+(assert) => {
+  const newStyle = {
+    left: '10px',
+  };
+
+  const component = ReactTestUtils.renderIntoDocument(
+    <ResponsiveImage style={newStyle} background>
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
+  );
+
+
+  const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+  const nodeStyle = node.getAttribute('style');
+
+  assert.equal(nodeStyle, 'left: 10px; background-image: url(' + imageData.initialUrl + ');');
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });

@@ -74,15 +74,18 @@ class ResponsiveImageSize extends React.Component {
           onLoad={this.onLoad}
           ref='image'
           src={this.state.imagePath}
+          style={this.props.style}
         />
       );
     } else {
       const backgroundStyle = {
         backgroundImage: 'url(' + this.state.imagePath + ')',
       };
+      const propStyle = this.props.style || {};
+      const style = Object.assign(propStyle, backgroundStyle);
 
       element = (
-        <div style={backgroundStyle} >
+        <div style={style} >
           {this.props.children}
         </div>
       );
@@ -148,6 +151,7 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Object} path - The image path
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
+ * @prop {Object} style - A style object to add to the component
  */
 ResponsiveImageSize.propTypes = {
   alt: React.PropTypes.string,
@@ -162,6 +166,7 @@ ResponsiveImageSize.propTypes = {
   onLoad: React.PropTypes.func,
   path: React.PropTypes.string.isRequired,
   preloadBackground: React.PropTypes.bool,
+  style: React.PropTypes.object,
 };
 
 
