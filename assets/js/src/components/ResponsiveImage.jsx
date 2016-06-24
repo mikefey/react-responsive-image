@@ -93,7 +93,7 @@ class ResponsiveImage extends React.Component {
       onLoad: this.props.onLoad,
       preloadBackground: this.props.preloadBackground,
       ref: 'currentImageSize',
-      imageStyle: this.props.style,
+      imageStyle: this.props.imageStyle,
       windowSize: this.state.windowSize,
     });
   }
@@ -143,11 +143,11 @@ class ResponsiveImage extends React.Component {
  * background image
  * @prop {Array|Object} children - The child elements of the component
  * @prop {String} className - An additional className to add to the component
+ * @prop {Object} imageStyle - A style object to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
  * @prop {Function} onLoad - A callback to fire when the image is loaded
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
- * @prop {Object} style - A style object to add to the component
  */
 ResponsiveImage.propTypes = {
   alt: React.PropTypes.string,
@@ -157,10 +157,10 @@ ResponsiveImage.propTypes = {
     React.PropTypes.object,
   ]),
   className: React.PropTypes.string,
+  imageStyle: React.PropTypes.object,
   lazy: React.PropTypes.bool,
   onLoad: React.PropTypes.func,
   preloadBackground: React.PropTypes.bool,
-  style: React.PropTypes.object,
 };
 
 export default ResponsiveImage;

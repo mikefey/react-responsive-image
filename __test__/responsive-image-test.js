@@ -327,7 +327,7 @@ test('ResponsiveImage component: Should add style ', (assert) => {
   };
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage style={newStyle}>
+    <ResponsiveImage imageStyle={newStyle}>
       <ResponsiveImageSize
         default
         minWidth={0}
@@ -361,7 +361,7 @@ test('ResponsiveImage component: Should add style to a background image',
   };
 
   const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage style={newStyle} background>
+    <ResponsiveImage imageStyle={newStyle} background>
       <ResponsiveImageSize
         default
         minWidth={0}
