@@ -1,3 +1,4 @@
-import { ResponsiveImage, ResponsiveImageSize } from './../lib/react-responsive-image.build.js';
+import ResponsiveImage from './components/ResponsiveImage.jsx';
+import ResponsiveImageSize from './components/ResponsiveImageSize.jsx';
 
 export { ResponsiveImage, ResponsiveImageSize };
