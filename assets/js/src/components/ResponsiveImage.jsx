@@ -85,18 +85,17 @@ class ResponsiveImage extends React.Component {
    * @returns {undefined} undefined
    */
   getCurrentSizeClone() {
-    return React.cloneElement(this.state.currentImageSize, Object.assign({},
-      {
-        alt: this.props.alt,
-        background: this.props.background,
-        key: 'image-size-' + this.state.currentImageSize.props.minWidth,
-        lazy: this.props.lazy,
-        onLoad: this.props.onLoad,
-        preloadBackground: this.props.preloadBackground,
-        ref: 'currentImageSize',
-        imageStyle: this.props.imageStyle,
-        windowSize: this.state.windowSize,
-      }));
+    return React.cloneElement(this.state.currentImageSize, {
+      alt: this.props.alt,
+      background: this.props.background,
+      key: 'image-size-' + this.state.currentImageSize.props.minWidth,
+      lazy: this.props.lazy,
+      onLoad: this.props.onLoad,
+      preloadBackground: this.props.preloadBackground,
+      ref: 'currentImageSize',
+      imageStyle: this.props.imageStyle,
+      windowSize: this.state.windowSize,
+    });
   }
 
 
