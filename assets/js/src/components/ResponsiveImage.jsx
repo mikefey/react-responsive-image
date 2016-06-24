@@ -93,7 +93,7 @@ class ResponsiveImage extends React.Component {
       onLoad: this.props.onLoad,
       preloadBackground: this.props.preloadBackground,
       ref: 'currentImageSize',
-      style: this.props.style,
+      imageStyle: this.props.style,
       windowSize: this.state.windowSize,
     });
   }

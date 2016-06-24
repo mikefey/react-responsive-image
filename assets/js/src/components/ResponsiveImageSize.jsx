@@ -74,14 +74,14 @@ class ResponsiveImageSize extends React.Component {
           onLoad={this.onLoad}
           ref='image'
           src={this.state.imagePath}
-          style={this.props.style}
+          style={this.props.imageStyle}
         />
       );
     } else {
       const backgroundStyle = {
         backgroundImage: 'url(' + this.state.imagePath + ')',
       };
-      const propStyle = this.props.style || {};
+      const propStyle = this.props.imageStyle || {};
       const style = Object.assign(propStyle, backgroundStyle);
 
       element = (
@@ -142,6 +142,7 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Array|Object} children - The child elements of the component
  * @prop {Boolean} default - If this is the default size to be loaded, before
  * the window width is available. Mainly used for rendering from the server.
+ * @prop {Object} imageStyle - A style object to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
  * @prop {Boolean} lockSize - If set to true, the component will only load the
  * initial size
@@ -151,7 +152,6 @@ class ResponsiveImageSize extends React.Component {
  * @prop {Object} path - The image path
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
- * @prop {Object} style - A style object to add to the component
  */
 ResponsiveImageSize.propTypes = {
   alt: React.PropTypes.string,
@@ -161,12 +161,12 @@ ResponsiveImageSize.propTypes = {
     React.PropTypes.object,
   ]),
   default: React.PropTypes.bool,
+  imageStyle: React.PropTypes.object,
   lazy: React.PropTypes.bool,
   minWidth: React.PropTypes.number.isRequired,
   onLoad: React.PropTypes.func,
   path: React.PropTypes.string.isRequired,
   preloadBackground: React.PropTypes.bool,
-  style: React.PropTypes.object,
 };
 
 
