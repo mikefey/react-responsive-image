@@ -33,7 +33,10 @@ domReady(() => {
   const appContainer = document.getElementsByClassName('app-container')[0];
 
   ReactDOM.render(
-    <ResponsiveImage>
+    <ResponsiveImage
+      alt={'Image alt text'}
+      imageStyle={{ width: '100%' }}
+    >
       <ResponsiveImageSize
         default
         minWidth={0}

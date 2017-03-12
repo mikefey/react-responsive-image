@@ -128,6 +128,36 @@ test('ResponsiveImage component: Should add an additional class ', (assert) => {
 });
 
 
+test('ResponsiveImage component: Should add an \'alt\' attribute ', (assert) => {
+  const component = ReactTestUtils.renderIntoDocument(
+    <ResponsiveImage
+      alt={'Image alt text'}
+    >
+      <ResponsiveImageSize
+        default
+        minWidth={0}
+        path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={768}
+        path={imageData.mediumImageUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1100}
+        path={imageData.originalImageUrl}
+      />
+    </ResponsiveImage>
+  );
+
+  const node = ReactDOM.findDOMNode(component);
+  const nodeClass = node.childNodes[0].childNodes[0].getAttribute('alt');
+
+  assert.equal(nodeClass, 'Image alt text');
+  ReactDOM.unmountComponentAtNode(document);
+  assert.end();
+});
+
+
 test('ResponsiveImage component: Should load the proper size image if the ' +
   'browser width is greater than 768px ', (assert) => {
   window.innerWidth = 769;

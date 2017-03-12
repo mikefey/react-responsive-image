@@ -24,7 +24,7 @@ class ResponsiveImageSize extends React.Component {
     };
 
 
-    // bind functions to component
+    // bind 'this' to functions
     this.renderImageElement = this.renderImageElement.bind(this);
     this.onLoad = this.onLoad.bind(this);
     this.preloadImage = this.preloadImage.bind(this);

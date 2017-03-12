@@ -9,6 +9,13 @@ class ResponsiveImage extends React.Component {
     this.displayName = 'ResponsiveImage';
 
 
+    // bind 'this' to functions
+    this.getInitialSize = this.getInitialSize.bind(this);
+    this.onResize = this.onResize.bind(this);
+    this.getCurrentSizeClone = this.getCurrentSizeClone.bind(this);
+    this.loadImage = this.loadImage.bind(this);
+
+
     // initial state object
     this.state = {
       currentImageSize: this.getInitialSize(),
@@ -17,10 +24,6 @@ class ResponsiveImage extends React.Component {
         height: 0,
       },
     };
-
-
-    // bind functions to component
-    this.onResize = this.onResize.bind(this);
   }
 
 
