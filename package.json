@@ -17,6 +17,7 @@
     "build": "NODE_ENV=production webpack -p --config webpack.production.config.js -d --display-reasons --display-chunks --progress"
   },
   "dependencies": {
+    "prop-types": "^15.5.10",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
   },

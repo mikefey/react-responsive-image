@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ResponsiveImage extends React.Component {
   constructor(props) {
@@ -153,17 +154,17 @@ class ResponsiveImage extends React.Component {
  * setting this to true will preload it before displaying
  */
 ResponsiveImage.propTypes = {
-  alt: React.PropTypes.string,
-  background: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.object,
+  alt: PropTypes.string,
+  background: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
   ]),
-  className: React.PropTypes.string,
-  imageStyle: React.PropTypes.object,
-  lazy: React.PropTypes.bool,
-  onLoad: React.PropTypes.func,
-  preloadBackground: React.PropTypes.bool,
+  className: PropTypes.string,
+  imageStyle: PropTypes.object,
+  lazy: PropTypes.bool,
+  onLoad: PropTypes.func,
+  preloadBackground: PropTypes.bool,
 };
 
 export default ResponsiveImage;
