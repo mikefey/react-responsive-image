@@ -28,6 +28,7 @@ class ResponsiveImageSize extends React.Component {
     // bind 'this' to functions
     this.renderImageElement = this.renderImageElement.bind(this);
     this.onLoad = this.onLoad.bind(this);
+    this.onError = this.onError.bind(this);
     this.preloadImage = this.preloadImage.bind(this);
   }
 
@@ -73,6 +74,7 @@ class ResponsiveImageSize extends React.Component {
         <img
           alt={this.props.alt}
           onLoad={this.onLoad}
+          onError={this.onError}
           ref='image'
           src={this.state.imagePath}
           style={this.props.imageStyle}
@@ -112,6 +114,23 @@ class ResponsiveImageSize extends React.Component {
       if (this.props.onLoad) {
         this.props.onLoad();
       }
+    }
+  }
+
+
+  /**
+   * Called when image loading failed
+   */
+  onError() {
+    if (this.props.fallbackImage) {
+      this.setState({
+        ...this.state,
+        imagePath: this.props.fallbackImage,
+      }, this.forceUpdate);
+    }
+
+    if (this.props.onError) {
+      this.props.onError();
     }
   }
 
@@ -166,8 +185,10 @@ ResponsiveImageSize.propTypes = {
   lazy: PropTypes.bool,
   minWidth: PropTypes.number.isRequired,
   onLoad: PropTypes.func,
+  onError: PropTypes.func,
   path: PropTypes.string.isRequired,
   preloadBackground: PropTypes.bool,
+  fallbackImage: PropTypes.string,
 };
 
 

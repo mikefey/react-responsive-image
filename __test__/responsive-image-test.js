@@ -416,3 +416,32 @@ test('ResponsiveImage component: Should add style to a background image',
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });
+
+
+test('ResponsiveImage component: Should render a fallback image', (assert) => {
+  const resourceTimeout = 100;
+  const component = ReactTestUtils.renderIntoDocument(
+    <ResponsiveImage>
+      <ResponsiveImageSize
+        default
+          minWidth={0}
+          path={imageData.initialUrl}
+      />
+      <ResponsiveImageSize
+        minWidth={1}
+        path={'not-valid'}
+        fallbackImage={imageData.initialUrl}
+      />
+    </ResponsiveImage>
+  );
+
+  setTimeout(() => {
+    const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+    const nodeSrc = node.getAttribute('src');
+
+    assert.equal(nodeSrc, imageData.initialUrl);
+
+    ReactDOM.unmountComponentAtNode(document);
+    assert.end();
+  }, resourceTimeout);
+});
