@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class ResponsiveImageSize extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class ResponsiveImageSize extends React.Component {
     // bind 'this' to functions
     this.renderImageElement = this.renderImageElement.bind(this);
     this.onLoad = this.onLoad.bind(this);
+    this.onError = this.onError.bind(this);
     this.preloadImage = this.preloadImage.bind(this);
   }
 
@@ -72,6 +74,7 @@ class ResponsiveImageSize extends React.Component {
         <img
           alt={this.props.alt}
           onLoad={this.onLoad}
+          onError={this.onError}
           ref='image'
           src={this.state.imagePath}
           style={this.props.imageStyle}
@@ -116,6 +119,22 @@ class ResponsiveImageSize extends React.Component {
 
 
   /**
+   * Called when image loading failed
+   */
+  onError(e) {
+    if (this.props.fallbackImage) {
+      this.setState({
+        imagePath: this.props.fallbackImage,
+      });
+    }
+
+    if (this.props.onError) {
+      this.props.onError(e);
+    }
+  }
+
+
+  /**
    * Preloads the image
    * @returns {ReactElement} React element
    */
@@ -154,19 +173,21 @@ class ResponsiveImageSize extends React.Component {
  * setting this to true will preload it before displaying
  */
 ResponsiveImageSize.propTypes = {
-  alt: React.PropTypes.string,
-  background: React.PropTypes.bool,
-  children: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.object,
+  alt: PropTypes.string,
+  background: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
   ]),
-  default: React.PropTypes.bool,
-  imageStyle: React.PropTypes.object,
-  lazy: React.PropTypes.bool,
-  minWidth: React.PropTypes.number.isRequired,
-  onLoad: React.PropTypes.func,
-  path: React.PropTypes.string.isRequired,
-  preloadBackground: React.PropTypes.bool,
+  default: PropTypes.bool,
+  imageStyle: PropTypes.object,
+  lazy: PropTypes.bool,
+  minWidth: PropTypes.number.isRequired,
+  onLoad: PropTypes.func,
+  onError: PropTypes.func,
+  path: PropTypes.string.isRequired,
+  preloadBackground: PropTypes.bool,
+  fallbackImage: PropTypes.string,
 };
 
 
