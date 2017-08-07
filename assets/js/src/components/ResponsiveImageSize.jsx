@@ -124,7 +124,6 @@ class ResponsiveImageSize extends React.Component {
   onError(e) {
     if (this.props.fallbackImage) {
       this.setState({
-        ...this.state,
         imagePath: this.props.fallbackImage,
       });
     }
