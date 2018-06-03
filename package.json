@@ -1,6 +1,6 @@
 {
   "name": "react-responsive-image",
-  "version": "3.4.3",
+  "version": "4.0.0",
   "description": "A responsive image React component",
   "main": "index.js",
   "author": "Mike Fey",

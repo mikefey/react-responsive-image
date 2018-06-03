@@ -302,14 +302,15 @@ test('ResponsiveImage component: Should load the placeholder image if the ' +
 });
 
 
-test('ResponsiveImage component: Should load the the proper image if the ' +
-  'lazy prop is true and loadImage() is called', (assert) => {
+test('ResponsiveImage component: Should load the the proper image when ' +
+  'the loadImage prop is set to true', (assert) => {
   window.innerWidth = 1101;
 
   let loadCount = 0;
   const resizeEvent =
     eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
   eventHelper.dispatchEvent(window, resizeEvent);
+  let component = null;
 
   function lazyLoadCallback() {
     loadCount++;
@@ -317,7 +318,7 @@ test('ResponsiveImage component: Should load the the proper image if the ' +
     // there will be 2 callbacks fired, one for the initial image and another
     // because a new image is loaded when the window is resized
     if (loadCount === 1) {
-      const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
+      const node = ReactDOM.findDOMNode(component).firstChild.firstChild.firstChild;
       const nodeSrc = node.getAttribute('src');
 
       assert.equal(nodeSrc, imageData.originalImageUrl);
@@ -326,28 +327,51 @@ test('ResponsiveImage component: Should load the the proper image if the ' +
     }
   }
 
-  const component = ReactTestUtils.renderIntoDocument(
-    <ResponsiveImage
-      lazy
-      onLoad={lazyLoadCallback}
-    >
-      <ResponsiveImageSize
-        default
-        minWidth={0}
-        path={imageData.initialUrl}
-      />
-      <ResponsiveImageSize
-        minWidth={768}
-        path={imageData.mediumImageUrl}
-      />
-      <ResponsiveImageSize
-        minWidth={1100}
-        path={imageData.originalImageUrl}
-      />
-    </ResponsiveImage>
-  );
+  class DemoApp extends React.Component {
+    constructor(props) {
+      super(props);
 
-  component.loadImage();
+      this.state = {
+        loadImage: false,
+      };
+    }
+
+    componentDidMount() {
+      setTimeout(() => {
+        this.setState({ loadImage: true });
+      }, 1000);
+    }
+
+    render() {
+      return (
+        <div className='component-demo-app'>
+          <ResponsiveImage
+            lazy
+            loadImage={this.state.loadImage}
+            onLoad={lazyLoadCallback}
+          >
+            <ResponsiveImageSize
+              default
+              minWidth={0}
+              path={imageData.initialUrl}
+            />
+            <ResponsiveImageSize
+              minWidth={768}
+              path={imageData.mediumImageUrl}
+            />
+            <ResponsiveImageSize
+              minWidth={1100}
+              path={imageData.originalImageUrl}
+            />
+          </ResponsiveImage>
+        </div>
+      );
+    }
+  }
+
+  component = ReactTestUtils.renderIntoDocument(
+    <DemoApp />
+  );
 });
 
 
@@ -424,8 +448,8 @@ test('ResponsiveImage component: Should render a fallback image', (assert) => {
     <ResponsiveImage>
       <ResponsiveImageSize
         default
-          minWidth={0}
-          path={imageData.initialUrl}
+        minWidth={0}
+        path={imageData.initialUrl}
       />
       <ResponsiveImageSize
         minWidth={1}

@@ -20,6 +20,7 @@ class ResponsiveImage extends React.Component {
     // initial state object
     this.state = {
       currentImageSize: this.getInitialSize(),
+      loadInitiated: false,
       windowSize: {
         width: 0,
         height: 0,
@@ -39,6 +40,21 @@ class ResponsiveImage extends React.Component {
 
 
   /**
+   * Called after component updates, checks to see if the loadImage prop
+   * was set to true and loads image accordingly
+   * @param {Object} prevProps - The component's props before the update
+   * @returns {undefined} undefined
+   */
+  componentDidUpdate(prevProps) {
+    const { loadImage } = this.props;
+
+    if (!prevProps.loadImage && loadImage) {
+      this.loadImage();
+    }
+  }
+
+
+  /**
    * Called before component is removed from the DOM
    * @returns {undefined} undefined
    */
@@ -52,12 +68,13 @@ class ResponsiveImage extends React.Component {
    * @returns {ReactElement} React element
    */
   render() {
+    const { className } = this.props;
     const currentSizeClone = this.getCurrentSizeClone();
-    const additionalClass = this.props.className ?
-      ' ' + this.props.className : '';
-    const className = 'component-responsive-image' + additionalClass;
+    const additionalClass = className ?
+      ` ${className}` : '';
+    const newClassName = `component-responsive-image${additionalClass}`;
 
-    return (<div className={className}>
+    return (<div className={newClassName}>
       {currentSizeClone}
     </div>);
   }
@@ -68,16 +85,17 @@ class ResponsiveImage extends React.Component {
    * @returns {undefined} undefined
    */
   getInitialSize() {
+    const { children } = this.props;
     let initialSize;
 
-    for (let i = 0; i < this.props.children.length; i++) {
-      if (this.props.children[i].props.default) {
-        initialSize = this.props.children[i];
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].props.default) {
+        initialSize = children[i];
       }
     }
 
     if (!initialSize) {
-      initialSize = this.props.children[0];
+      initialSize = children[0];
     }
 
     return initialSize;
@@ -89,16 +107,34 @@ class ResponsiveImage extends React.Component {
    * @returns {undefined} undefined
    */
   getCurrentSizeClone() {
-    return React.cloneElement(this.state.currentImageSize, {
-      alt: this.props.alt,
-      background: this.props.background,
-      key: 'image-size-' + this.state.currentImageSize.props.minWidth,
-      lazy: this.props.lazy,
-      onLoad: this.props.onLoad,
-      preloadBackground: this.props.preloadBackground,
+    const {
+      alt,
+      background,
+      lazy,
+      loadImage,
+      onLoad,
+      preloadBackground,
+      imageStyle,
+    } = this.props;
+
+    const {
+      currentImageSize,
+      loadInitiated,
+      windowSize,
+    } = this.state;
+
+    return React.cloneElement(currentImageSize, {
+      alt,
+      background,
+      key: 'image-size-' + currentImageSize.props.minWidth,
+      lazy,
+      loadInitiated,
+      loadImage,
+      onLoad,
+      preloadBackground,
       ref: 'currentImageSize',
-      imageStyle: this.props.imageStyle,
-      windowSize: this.state.windowSize,
+      imageStyle,
+      windowSize,
     });
   }
 
@@ -109,17 +145,17 @@ class ResponsiveImage extends React.Component {
    */
   onResize() {
     let currentImageSize;
-
+    const { children } = this.props;
     const windowSize = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
 
-    for (let i = 0; i < this.props.children.length; i++) {
-      const childProps = this.props.children[i].props;
+    for (let i = 0; i < children.length; i++) {
+      const childProps = children[i].props;
 
       if (windowSize.width >= childProps.minWidth) {
-        currentImageSize = this.props.children[i];
+        currentImageSize = children[i];
       }
     }
 
@@ -129,12 +165,12 @@ class ResponsiveImage extends React.Component {
     });
   }
 
-
   /**
    * Loads the image, intended as a public method to lazy load the image
    * @returns {undefined} undefined
    */
   loadImage() {
+    this.setState({ loadInitiated: true });
     this.refs.currentImageSize.preloadImage();
   }
 }
@@ -149,6 +185,7 @@ class ResponsiveImage extends React.Component {
  * @prop {String} className - An additional className to add to the component
  * @prop {Object} imageStyle - A style object to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
+ * @prop {Function} loadImage - Set to true to load an image, when the lazy prop is set to true
  * @prop {Function} onLoad - A callback to fire when the image is loaded
  * @prop {Boolean} preloadBackground - If the image is a background image,
  * setting this to true will preload it before displaying
@@ -163,6 +200,7 @@ ResponsiveImage.propTypes = {
   className: PropTypes.string,
   imageStyle: PropTypes.object,
   lazy: PropTypes.bool,
+  loadImage: PropTypes.bool,
   onLoad: PropTypes.func,
   preloadBackground: PropTypes.bool,
 };

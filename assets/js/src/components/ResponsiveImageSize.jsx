@@ -5,21 +5,20 @@ class ResponsiveImageSize extends React.Component {
   constructor(props) {
     super(props);
 
+    const { preloadBackground, lazy, loadInitiated, background, path } = this.props;
 
     // used by React as the component name
     this.displayName = 'ResponsiveImageSize';
-
 
     // blank 1px X 1px .gif in base64 format
     this.placeHolderUrl = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///' +
       'yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-
     // initial state object
     this.state = {
-      imagePath: (this.props.preloadBackground || this.props.lazy) ?
-        this.placeHolderUrl : this.props.path,
-      loaded: (this.props.background && !this.props.preloadBackground),
+      imagePath: (preloadBackground || (lazy && !loadInitiated)) ?
+        this.placeHolderUrl : path,
+      loaded: (background && !preloadBackground),
       fileWidth: 0,
       fileHeight: 0,
     };
@@ -38,7 +37,8 @@ class ResponsiveImageSize extends React.Component {
    * @returns {undefined} undefined
    */
   componentDidMount() {
-    if (this.props.background && this.props.preloadBackground) {
+    const { background, preloadBackground } = this.props;
+    if (background && preloadBackground) {
       this.preloadImage();
     }
   }
@@ -49,9 +49,11 @@ class ResponsiveImageSize extends React.Component {
    * @returns {ReactElement} React element
    */
   render() {
+    const { background } = this.props;
+    const { loaded } = this.state;
     const imageElement = this.renderImageElement();
-    const backgroundClass = this.props.background ? ' background' : '';
-    const loadedClass = this.state.loaded ? ' loaded' : '';
+    const backgroundClass = background ? ' background' : '';
+    const loadedClass = loaded ? ' loaded' : '';
     const className = 'component-responsive-image-size' +
       backgroundClass +
       loadedClass;
@@ -68,28 +70,30 @@ class ResponsiveImageSize extends React.Component {
    */
   renderImageElement() {
     let element;
+    const { alt, imageStyle, children } = this.props;
+    const { imagePath } = this.state;
 
     if (!this.props.background) {
       element = (
         <img
-          alt={this.props.alt}
+          alt={alt}
           onLoad={this.onLoad}
           onError={this.onError}
           ref='image'
-          src={this.state.imagePath}
-          style={this.props.imageStyle}
+          src={imagePath}
+          style={imageStyle}
         />
       );
     } else {
       const backgroundStyle = {
-        backgroundImage: 'url(' + this.state.imagePath + ')',
+        backgroundImage: 'url(' + imagePath + ')',
       };
-      const propStyle = this.props.imageStyle || {};
+      const propStyle = imageStyle || {};
       const style = Object.assign(propStyle, backgroundStyle);
 
       element = (
         <div style={style} >
-          {this.props.children}
+          {children}
         </div>
       );
     }
@@ -105,14 +109,16 @@ class ResponsiveImageSize extends React.Component {
    */
   onLoad(e) {
     if (e.target.getAttribute('src') !== this.placeHolderUrl) {
+      const { onLoad } = this.props;
+
       this.setState({
         loaded: true,
         fileWidth: e.target.width,
         fileHeight: e.target.height,
       });
 
-      if (this.props.onLoad) {
-        this.props.onLoad();
+      if (onLoad) {
+        onLoad();
       }
     }
   }
@@ -122,14 +128,16 @@ class ResponsiveImageSize extends React.Component {
    * Called when image loading failed
    */
   onError(e) {
-    if (this.props.fallbackImage) {
+    const { fallbackImage, onError } = this.props;
+
+    if (fallbackImage) {
       this.setState({
-        imagePath: this.props.fallbackImage,
+        imagePath: fallbackImage,
       });
     }
 
     if (this.props.onError) {
-      this.props.onError(e);
+      onError(e);
     }
   }
 
@@ -139,16 +147,17 @@ class ResponsiveImageSize extends React.Component {
    * @returns {ReactElement} React element
    */
   preloadImage() {
+    const { path } = this.props;
     const imageElement = new Image();
 
     imageElement.onload = () => {
       this.setState({
         loaded: true,
-        imagePath: this.props.path,
+        imagePath: path,
       });
     };
 
-    imageElement.src = this.props.path;
+    imageElement.src = path;
   }
 }
 
@@ -163,6 +172,7 @@ class ResponsiveImageSize extends React.Component {
  * the window width is available. Mainly used for rendering from the server.
  * @prop {Object} imageStyle - A style object to add to the component
  * @prop {Boolean} lazy - If the component should lazy-load the image
+ * @prop {Boolean} loadInitiated - If image has started loading
  * @prop {Boolean} lockSize - If set to true, the component will only load the
  * initial size
  * @prop {Number} minWidth - The minimum width the window should be to load
@@ -182,6 +192,7 @@ ResponsiveImageSize.propTypes = {
   default: PropTypes.bool,
   imageStyle: PropTypes.object,
   lazy: PropTypes.bool,
+  loadInitiated: PropTypes.bool,
   minWidth: PropTypes.number.isRequired,
   onLoad: PropTypes.func,
   onError: PropTypes.func,

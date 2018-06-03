@@ -6,6 +6,33 @@ import ReactDOM from 'react-dom';
 import ResponsiveImage from './components/ResponsiveImage.jsx';
 import ResponsiveImageSize from './components/ResponsiveImageSize.jsx';
 
+class DemoApp extends React.Component {
+  render() {
+    return (
+      <div className='component-demo-app'>
+        <ResponsiveImage
+          alt={'Image alt text'}
+          imageStyle={{ width: '100%' }}
+        >
+          <ResponsiveImageSize
+            default
+            minWidth={0}
+            path={'assets/images/small/building.jpg'}
+          />
+          <ResponsiveImageSize
+            minWidth={768}
+            path={'assets/images/medium/building.jpg'}
+          />
+          <ResponsiveImageSize
+            minWidth={1100}
+            path={'assets/images/original/building.jpg'}
+          />
+        </ResponsiveImage>
+      </div>
+    );
+  }
+}
+
 
 /**
  * Calls a function when the DOM is ready
@@ -32,25 +59,5 @@ function domReady(callback) {
 domReady(() => {
   const appContainer = document.getElementsByClassName('app-container')[0];
 
-  ReactDOM.render(
-    <ResponsiveImage
-      alt={'Image alt text'}
-      imageStyle={{ width: '100%' }}
-    >
-      <ResponsiveImageSize
-        default
-        minWidth={0}
-        path={'assets/images/small/building.jpg'}
-      />
-      <ResponsiveImageSize
-        minWidth={768}
-        path={'assets/images/medium/building.jpg'}
-      />
-      <ResponsiveImageSize
-        minWidth={1100}
-        path={'assets/images/original/building.jpg'}
-      />
-    </ResponsiveImage>,
-    appContainer
-  );
+  ReactDOM.render(<DemoApp />, appContainer);
 });

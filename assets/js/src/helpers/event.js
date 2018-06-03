@@ -48,7 +48,6 @@ const eventHelper = {
       }
 
       if (ifc === 'KeyboardEvents') {
-        console.log('as;dlfkjas;flkjasld;fjk')
         evt.initEvent(type,
           e.bubbles,
           e.cancelable,
