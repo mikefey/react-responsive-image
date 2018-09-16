@@ -58,9 +58,11 @@ class ResponsiveImageSize extends React.Component {
       backgroundClass +
       loadedClass;
 
-    return (<div className={className}>
-      {imageElement}
-    </div>);
+    return (
+      <div className={className}>
+        {imageElement}
+      </div>
+    );
   }
 
 
@@ -79,7 +81,7 @@ class ResponsiveImageSize extends React.Component {
           alt={alt}
           onLoad={this.onLoad}
           onError={this.onError}
-          ref='image'
+          ref={image => this._image = image}
           src={imagePath}
           style={imageStyle}
         />
@@ -89,10 +91,10 @@ class ResponsiveImageSize extends React.Component {
         backgroundImage: 'url(' + imagePath + ')',
       };
       const propStyle = imageStyle || {};
-      const style = Object.assign(propStyle, backgroundStyle);
+      const style = Object.assign({}, propStyle, backgroundStyle);
 
       element = (
-        <div style={style} >
+        <div style={style}>
           {children}
         </div>
       );
