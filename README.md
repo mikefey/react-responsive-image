@@ -3,29 +3,30 @@ A React responsive image component.
 
 Displays different image sizes based on the user's window width. Can support an unlimited number of image sizes.
 
-## to install
+## To install
 ```
 npm i react-responsive-image
 ```
 
-## to run demo
+## To run demo
 ```
 npm start
 ```
 Then navigate to [http://localhost:3000/demo.html](http://localhost:3000/demo.html)
 
-## to run tests
+## To run tests
 ```
 npm test
 ```
 
-## to build
+## To build
 ```
 npm run build
 ```
 
-## usage
-```
+## Usage
+
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ResponsiveImage, ResponsiveImageSize } from 'react-responsive-image';
