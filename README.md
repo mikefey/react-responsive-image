@@ -54,7 +54,7 @@ import { ResponsiveImage, ResponsiveImageSize } from 'react-responsive-image';
 **background {Boolean}** - If set to true, the component will render a background image  
 **className {String}** - An additional className to add to the component     
 **lazy {Boolean}** - If the component should lazy-load the image  
-**loadImage {Function}** - Set to `true` to load an image, if the `lazy` prop is set to `true`  
+**loadImage {Boolean}** - Set to `true` to load an image, if the `lazy` prop is set to `true`  
 **onLoad {Function}** - A callback to fire when the image is loaded  
 **style {Object}** - A style object to add to the component 
 
