@@ -74,9 +74,11 @@ class ResponsiveImage extends React.Component {
       ` ${className}` : '';
     const newClassName = `component-responsive-image${additionalClass}`;
 
-    return (<div className={newClassName}>
-      {currentSizeClone}
-    </div>);
+    return (
+      <div className={newClassName}>
+        {currentSizeClone}
+      </div>
+    );
   }
 
 
@@ -132,7 +134,7 @@ class ResponsiveImage extends React.Component {
       loadImage,
       onLoad,
       preloadBackground,
-      ref: 'currentImageSize',
+      ref: cis => (this.currentImageSize = cis),
       imageStyle,
       windowSize,
     });
@@ -171,7 +173,7 @@ class ResponsiveImage extends React.Component {
    */
   loadImage() {
     this.setState({ loadInitiated: true });
-    this.refs.currentImageSize.preloadImage();
+    this.currentImageSize.preloadImage();
   }
 }
 

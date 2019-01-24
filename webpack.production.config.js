@@ -1,49 +1,74 @@
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+
 module.exports = {
   entry: './assets/js/src/index.js',
   output: {
-    path: 'assets/js/lib/',
+    path: `${__dirname}/assets/js/lib/`,
     filename: 'react-responsive-image.build.js',
     libraryTarget: 'umd',
-    library: 'ResponsiveImage'
+    library: 'ResponsiveImage',
   },
   externals: [{
-    'react' : 'react',
-    'react-dom' : 'react-dom'
+    react: 'react',
+    'react-dom': 'react-dom',
   }],
   devtool: 'eval',
+  mode: 'production',
   module: {
-    preLoaders: [
+    rules: [
       {
         test: /\.jsx?$/,
+        enforce: 'pre',
         exclude: /(node_modules|bower_components)/,
-        loader: 'source-map'
-      }
-    ],
-    loaders: [
+        loader: 'source-map-loader',
+      },
       {
         test: /\.scss$/,
         include: /src/,
         loaders: [
-          'style',
-          'css',
-          'postcss-loader',
-          'sass?outputStyle=expanded'
-        ]
+          'style-loader',
+          'css-loader',
+          'sass-loader?outputStyle=expanded',
+        ],
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loaders: [
-          'url?limit=8192',
-          'img'
-        ]
+          'url-loader?limit=8192',
+          'img-loader',
+        ],
       },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         loaders: [
-          'babel?presets[]=stage-0,presets[]=react,presets[]=es2015'
-        ]
-      }
-    ]
-  }
+          'babel-loader?presets[]=stage-0,presets[]=react,presets[]=es2015',
+        ],
+      },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      // we specify a custom UglifyJsPlugin here to get source maps in production
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        uglifyOptions: {
+          compress: false,
+          ecma: 6,
+          mangle: true,
+        },
+        sourceMap: true,
+      }),
+    ],
+  },
+  plugins: [
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0,
+    }),
+  ],
 };

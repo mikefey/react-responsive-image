@@ -1,7 +1,7 @@
 import test from 'tape';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import ReactTestUtils from 'react-dom/test-utils';
 import eventHelper from '../assets/js/src/helpers/event';
 import ResponsiveImage from '../assets/js/src/components/ResponsiveImage.jsx';
 import ResponsiveImageSize from '../assets/js/src/components/ResponsiveImageSize.jsx';
@@ -271,6 +271,8 @@ test('ResponsiveImage component: Should load the placeholder image if the ' +
   'lazy prop is true ', (assert) => {
   window.innerWidth = 1025;
 
+  const placeholderImageUrl
+    = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   const resizeEvent =
     eventHelper.createEvent('Events', 'resize', 0, 0, 0, 0);
   eventHelper.dispatchEvent(window, resizeEvent);
@@ -296,7 +298,7 @@ test('ResponsiveImage component: Should load the placeholder image if the ' +
   const node = ReactDOM.findDOMNode(component).firstChild.firstChild;
   const nodeSrc = node.getAttribute('src');
 
-  assert.equal(nodeSrc, component.refs.currentImageSize.placeHolderUrl);
+  assert.equal(nodeSrc, placeholderImageUrl);
   ReactDOM.unmountComponentAtNode(document);
   assert.end();
 });

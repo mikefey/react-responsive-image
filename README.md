@@ -10,6 +10,10 @@ npm i react-responsive-image
 
 ## To run demo
 ```
+npm install
+```
+then
+```
 npm start
 ```
 Then navigate to [http://localhost:3000/demo.html](http://localhost:3000/demo.html)
@@ -50,15 +54,35 @@ import { ResponsiveImage, ResponsiveImageSize } from 'react-responsive-image';
 ```
 
 ## props for ResponsiveImage component
-**alt {String}** - The value for the image alt attribute  
-**background {Boolean}** - If set to true, the component will render a background image  
-**className {String}** - An additional className to add to the component     
-**lazy {Boolean}** - If the component should lazy-load the image  
-**loadImage {Boolean}** - Set to `true` to load an image, if the `lazy` prop is set to `true`  
-**onLoad {Function}** - A callback to fire when the image is loaded  
-**style {Object}** - A style object to add to the component 
+```javascript
+alt {String} // The value for the image alt attribute
+```
+```javascript
+background {Boolean} // If set to true, the component will render a background image
+```
+```javascript
+className {String} // An additional className to add to the component
+```
+```javascript    
+lazy {Boolean} // If the component should lazy-load the image
+```
+```javascript
+loadImage {Boolean} // Set to `true` to load an image, if the `lazy` prop is set to `true`
+```
+```javascript
+onLoad {Function} // A callback to fire when the image is loaded
+```
+```javascript
+style {Object} // A style object to add to the component
+```
 
 ## props for ResponsiveImageSize component
-**default {Boolean}** - If this is the default size to be loaded, before the window width is available. Mainly used for rendering from the server.  
-**minWidth {Number}** - The minimum width the window should be to load this image  
-**path {Object}** - The image path
+```javascript
+default {Boolean} // If this is the default size to be loaded, before the window width is available. Mainly used for rendering from the server.
+```
+```javascript
+minWidth {Number} // The minimum width the window should be to load this image
+```
+```javascript 
+path {Object} // The image path
+```
