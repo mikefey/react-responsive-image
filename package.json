@@ -14,7 +14,7 @@
     "webpack-server": "webpack-dev-server --hot --progress --colors",
     "web-server": "http-server -p 3000 .",
     "start": "npm run webpack-server & npm run web-server",
-    "build": "NODE_ENV=production webpack --config webpack.production.config.js --display-reasons --display-chunks --progress"
+    "build": "webpack --config webpack.production.config.js"
   },
   "dependencies": {
     "prop-types": "^15.5.10"
